@@ -261,15 +261,15 @@
           </div>
           <div class="info-item">
             <strong>Data e horário</strong>
-            15 de maio de 2026, às 00h
+            00 de mês de 2026, às 00h
           </div>
           <div class="info-item">
             <strong>Local</strong>
-            Parque de exposição — Taiobeiras/MG
+            Local do evento — Taiobeiras/MG
           </div>
           <div class="info-item">
             <strong>Contato</strong>
-            (38) 3845-1414
+            (38) 0000-0000
           </div>
         </div>
       </div>
@@ -283,7 +283,7 @@
           Informe seus dados abaixo. Após o envio, sua confirmação será registrada pela organização do evento.
         </p>
 
-        <form id="rsvpForm">
+        <form id="rsvpForm" method="GET" action="https://script.google.com/macros/s/AKfycbxFrfUSoNvAIBJdqSGFcHvp8a0XwNLaxePmdvupoDyT8RmULAgRKSjqBlc9COS--GYTXw/exec" target="hidden_iframe">
           <div>
             <label for="nome">Nome completo *</label>
             <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required />
@@ -333,6 +333,7 @@
 
           <button class="button" type="submit">Enviar confirmação</button>
         </form>
+        <iframe name="hidden_iframe" style="display:none;"></iframe>
 
         <div class="success" id="successMessage">
           Confirmação registrada com sucesso! Obrigado por confirmar sua presença.
@@ -346,106 +347,24 @@
   </main>
 
   <script>
-    /*
-      CÓDIGO CORRETO PARA O GOOGLE APPS SCRIPT
-
-      Cole este código em Extensões > Apps Script dentro da sua Planilha Google:
-
-      function doGet(e) {
-        return ContentService
-          .createTextOutput('Web App ativo. Envie os dados pelo formulário do site.')
-          .setMimeType(ContentService.MimeType.TEXT);
-      }
-
-      function doPost(e) {
-        const planilha = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-
-        if (planilha.getLastRow() === 0) {
-          planilha.appendRow([
-            'Data/Hora',
-            'Nome',
-            'Telefone',
-            'Email',
-            'Órgão/Instituição',
-            'Presença',
-            'Acompanhantes',
-            'Observações'
-          ]);
-        }
-
-        planilha.appendRow([
-          new Date(),
-          e.parameter.nome || '',
-          e.parameter.telefone || '',
-          e.parameter.email || '',
-          e.parameter.orgao || '',
-          e.parameter.presenca || '',
-          e.parameter.acompanhantes || '',
-          e.parameter.observacoes || ''
-        ]);
-
-        return ContentService
-          .createTextOutput('OK')
-          .setMimeType(ContentService.MimeType.TEXT);
-      }
-
-      Depois de colar:
-      1. Salve.
-      2. Implantar > Gerenciar implantações.
-      3. Clique no lápis.
-      4. Em versão, selecione Nova versão.
-      5. Implantar.
-      6. Acesso: Qualquer pessoa.
-      7. Cole a URL do Web App abaixo.
-    */
-
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxFrfUSoNvAIBJdqSGFcHvp8a0XwNLaxePmdvupoDyT8RmULAgRKSjqBlc9COS--GYTXw/exec';
-
     const form = document.getElementById('rsvpForm');
     const successMessage = document.getElementById('successMessage');
     const button = document.querySelector('.button');
 
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-
+    form.addEventListener('submit', function() {
       button.disabled = true;
       button.textContent = 'Enviando...';
 
-      const params = new URLSearchParams({
-        nome: document.getElementById('nome').value,
-        telefone: document.getElementById('telefone').value,
-        email: document.getElementById('email').value,
-        orgao: document.getElementById('orgao').value,
-        presenca: document.getElementById('presenca').value,
-        acompanhantes: document.getElementById('acompanhantes').value,
-        observacoes: document.getElementById('observacoes').value
-      });
-
-      const urlFinal = GOOGLE_SCRIPT_URL + '?' + params.toString();
-
-      fetch(urlFinal, {
-        method: 'GET',
-        mode: 'no-cors'
-      })
-      .then(function() {
+      setTimeout(function() {
         successMessage.style.display = 'block';
         successMessage.style.background = '#e6f7ef';
         successMessage.style.borderColor = '#b7ebcf';
         successMessage.style.color = '#095c37';
-        successMessage.textContent = 'Confirmação enviada! Aguarde alguns segundos e verifique a Planilha Google.';
+        successMessage.textContent = 'Confirmação enviada! Aguarde alguns segundos e atualize a Planilha Google.';
         form.reset();
-      })
-      .catch(function() {
-        successMessage.style.display = 'block';
-        successMessage.style.background = '#fdecea';
-        successMessage.style.borderColor = '#f5c2c0';
-        successMessage.style.color = '#8a1f17';
-        successMessage.textContent = 'Erro ao enviar. Verifique a URL do Apps Script e a implantação.';
-      })
-      .finally(function() {
         button.disabled = false;
         button.textContent = 'Enviar confirmação';
-      });
+      }, 1500);
     });
   </script>
 </body>
